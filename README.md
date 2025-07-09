@@ -1,42 +1,44 @@
-# Auth Todo API
+# 🧠 Auth Todo API
 
 A simple RESTful backend API built with **Node.js**, **Express**, **MongoDB**, and **JWT** that allows users to register, log in, and manage their personal todo tasks.
 
+---
+
 ## 🚀 Features
 
-- ✅ User Signup and Login
-- 🔐 JWT-based Authentication
-- 📝 Create and fetch todos (per user)
-- 🧾 MongoDB with Mongoose models
-- 📦 REST API with JSON responses
+- ✅ User Signup and Login  
+- 🔐 JWT-based Authentication using custom `token` header  
+- 📝 Create, fetch, update, and delete todos  
+- 🗃️ MongoDB with Mongoose schemas & models  
+- 📦 Clean JSON-based REST API  
 
 ---
 
 ## 📁 Project Structure
 
 ```
-├── index.js         # Main server file
-├── db.js            # MongoDB schemas & models
-├── package.json     # Project metadata
-├── .gitignore       # Ignored files
+├── index.js         # Main server file (routes, middleware, logic)
+├── db.js            # MongoDB schemas and models
+├── package.json     # Project metadata and dependencies
+├── .gitignore       # Files to ignore in version control
 ```
 
 ---
 
-## 🔧 Tech Stack
+## 🛠️ Tech Stack
 
-- Node.js
-- Express.js
-- MongoDB + Mongoose
-- JSON Web Token (JWT)
-- bcrypt (recommended for password hashing)
+- **Node.js**  
+- **Express.js**  
+- **MongoDB** with **Mongoose**  
+- **JWT** for authentication  
+- **bcrypt** for password hashing  
+- **zod** for request validation  
 
 ---
 
 ## 🧪 API Endpoints
 
-### 🔹 POST `/signup`
-
+### 🔹 POST `/signup`  
 Registers a new user.
 
 **Request Body:**
@@ -48,11 +50,17 @@ Registers a new user.
 }
 ```
 
+**Response:**
+```json
+{
+  "message": "You are signed up"
+}
+```
+
 ---
 
-### 🔹 POST `/signin`
-
-Authenticates user and returns a token.
+### 🔹 POST `/signin`  
+Authenticates the user and returns a JWT token.
 
 **Request Body:**
 ```json
@@ -71,13 +79,12 @@ Authenticates user and returns a token.
 
 ---
 
-### 🔹 POST `/todo` (Auth Required)
-
-Creates a new todo for the logged-in user.
+### 🔹 POST `/todo`  
+Creates a new todo.
 
 **Headers:**
 ```
-Authorization: Bearer <JWT_TOKEN>
+token: JWT_TOKEN_HERE
 ```
 
 **Request Body:**
@@ -87,21 +94,75 @@ Authorization: Bearer <JWT_TOKEN>
 }
 ```
 
+**Response:**
+```json
+{
+  "message": "Todo created"
+}
+```
+
 ---
 
-### 🔹 POST `/todos` (Auth Required)
-
-Fetches all todos for the authenticated user.
+### 🔹 POST `/todos`  
+Fetches all todos of the authenticated user.
 
 **Headers:**
 ```
-Authorization: Bearer <JWT_TOKEN>
+token: JWT_TOKEN_HERE
 ```
 
 **Response:**
 ```json
 {
-  "todos": [ ... ]
+  "todos": [
+    {
+      "_id": "todoId",
+      "title": "Learn Node.js",
+      "done": false,
+      "userId": "userId"
+    }
+  ]
+}
+```
+
+---
+
+### 🔹 PUT `/todo/:id`  
+Updates a todo (e.g., mark as done).
+
+**Headers:**
+```
+token: JWT_TOKEN_HERE
+```
+
+**Request Body:**
+```json
+{
+  "done": true
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Todo updated"
+}
+```
+
+---
+
+### 🔹 DELETE `/todo/:id`  
+Deletes a todo.
+
+**Headers:**
+```
+token: JWT_TOKEN_HERE
+```
+
+**Response:**
+```json
+{
+  "message": "Todo deleted"
 }
 ```
 
@@ -109,24 +170,42 @@ Authorization: Bearer <JWT_TOKEN>
 
 ## ⚙️ Setup Instructions
 
-1. Clone the repository:
+1. **Clone the repository:**
 ```bash
-git clone https://github.com/your-username/auth-todo-api.git
-cd auth-todo-api
+git clone https://github.com/yuvrajnode/todo-backend-with-database.git
+cd todo-backend-with-database
 ```
 
-2. Install dependencies:
+2. **Install dependencies:**
 ```bash
 npm install
 ```
 
-3. Create `.env` file (if using secrets) or configure variables in `index.js`.
+3. **Configure MongoDB URI and secret (optional):**  
+If using environment variables, create a `.env` file and add:
+```
+MONGO_URI=your_mongo_connection_string
+JWT_SECRET=your_secret
+```
+(Or keep them hardcoded in `index.js` as done currently.)
 
-4. Start the server:
+4. **Start the server:**
 ```bash
 node index.js
 ```
 
-The server will run on `http://localhost:3000`
+Server will run at:  
+📍 `http://localhost:3000`
 
 ---
+
+## 🙋‍♂️ Author
+
+Made with ❤️ by **Yuvraj Singh**  
+GitHub: [@yuvrajnode](https://github.com/yuvrajnode)
+
+---
+
+## 📜 License
+
+This project is open source and free to use under the [MIT License](LICENSE).
