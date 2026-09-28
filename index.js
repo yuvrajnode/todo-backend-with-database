@@ -2,11 +2,11 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const { UserModel, TodoModel } = require('./db');
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = 'Yuvrajbackend';
+const JWT_SECRET = process.env.JWT_SECRET;
 const mongoose = require('mongoose');
 const { z } = require('zod');
 
-mongoose.connect("mongodb+srv://Yuvraj:ouXBDIPxS5qTWPhf@clusteryuvi.zzixubw.mongodb.net/");
+mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
 app.use(express.json());
@@ -111,6 +111,7 @@ app.delete("/todo/:id", auth, async function(req, res) {
     res.json({ message: "Todo deleted" });
 });
 
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });

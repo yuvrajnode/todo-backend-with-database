@@ -1,211 +1,64 @@
-# 🧠 Auth Todo API
+# Todo Backend with Database
 
-A simple RESTful backend API built with **Node.js**, **Express**, **MongoDB**, and **JWT** that allows users to register, log in, and manage their personal todo tasks.
+A small REST API where users sign up, log in, and manage their own todos. Node.js, Express 5, MongoDB (Mongoose), bcrypt and JWT, with Zod validating sign-up input.
 
----
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express_5-000000?style=flat-square&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 
-## 🚀 Features
+## Features
 
-- ✅ User Signup and Login  
-- 🔐 JWT-based Authentication using custom `token` header  
-- 📝 Create, fetch, update, and delete todos  
-- 🗃️ MongoDB with Mongoose schemas & models  
-- 📦 Clean JSON-based REST API  
+- Sign up and sign in, with passwords hashed by bcrypt
+- JWT auth through a `token` request header
+- Create, list, update and delete todos, scoped to the signed-in user
+- Mongoose schemas for users and todos
 
----
+## Getting started
 
-## 📁 Project Structure
+**Prerequisites:** Node.js 20.6+ (for `--env-file`) and a MongoDB database.
 
-```
-├── index.js         # Main server file (routes, middleware, logic)
-├── db.js            # MongoDB schemas and models
-├── package.json     # Project metadata and dependencies
-├── .gitignore       # Files to ignore in version control
-```
-
----
-
-## 🛠️ Tech Stack
-
-- **Node.js**  
-- **Express.js**  
-- **MongoDB** with **Mongoose**  
-- **JWT** for authentication  
-- **bcrypt** for password hashing  
-- **zod** for request validation  
-
----
-
-## 🧪 API Endpoints
-
-### 🔹 POST `/signup`  
-Registers a new user.
-
-**Request Body:**
-```json
-{
-  "email": "user@example.com",
-  "password": "yourpassword",
-  "name": "Yuvraj"
-}
-```
-
-**Response:**
-```json
-{
-  "message": "You are signed up"
-}
-```
-
----
-
-### 🔹 POST `/signin`  
-Authenticates the user and returns a JWT token.
-
-**Request Body:**
-```json
-{
-  "email": "user@example.com",
-  "password": "yourpassword"
-}
-```
-
-**Response:**
-```json
-{
-  "token": "JWT_TOKEN_HERE"
-}
-```
-
----
-
-### 🔹 POST `/todo`  
-Creates a new todo.
-
-**Headers:**
-```
-token: JWT_TOKEN_HERE
-```
-
-**Request Body:**
-```json
-{
-  "title": "Learn Node.js"
-}
-```
-
-**Response:**
-```json
-{
-  "message": "Todo created"
-}
-```
-
----
-
-### 🔹 POST `/todos`  
-Fetches all todos of the authenticated user.
-
-**Headers:**
-```
-token: JWT_TOKEN_HERE
-```
-
-**Response:**
-```json
-{
-  "todos": [
-    {
-      "_id": "todoId",
-      "title": "Learn Node.js",
-      "done": false,
-      "userId": "userId"
-    }
-  ]
-}
-```
-
----
-
-### 🔹 PUT `/todo/:id`  
-Updates a todo (e.g., mark as done).
-
-**Headers:**
-```
-token: JWT_TOKEN_HERE
-```
-
-**Request Body:**
-```json
-{
-  "done": true
-}
-```
-
-**Response:**
-```json
-{
-  "message": "Todo updated"
-}
-```
-
----
-
-### 🔹 DELETE `/todo/:id`  
-Deletes a todo.
-
-**Headers:**
-```
-token: JWT_TOKEN_HERE
-```
-
-**Response:**
-```json
-{
-  "message": "Todo deleted"
-}
-```
-
----
-
-## ⚙️ Setup Instructions
-
-1. **Clone the repository:**
 ```bash
 git clone https://github.com/yuvrajnode/todo-backend-with-database.git
 cd todo-backend-with-database
-```
-
-2. **Install dependencies:**
-```bash
 npm install
+cp .env.example .env   # then fill in your own values
+npm start
 ```
 
-3. **Configure MongoDB URI and secret (optional):**  
-If using environment variables, create a `.env` file and add:
-```
-MONGO_URI=your_mongo_connection_string
-JWT_SECRET=your_secret
-```
-(Or keep them hardcoded in `index.js` as done currently.)
+| Variable | Description |
+|---|---|
+| `MONGODB_URI` | MongoDB connection string |
+| `JWT_SECRET` | Secret used to sign tokens |
+| `PORT` | Port to listen on (default `3000`) |
 
-4. **Start the server:**
+## API
+
+| Method | Route | Auth | Body | Response |
+|---|---|---|---|---|
+| POST | `/signup` | – | `{ email, password, name }` | `{ message }` |
+| POST | `/signin` | – | `{ email, password }` | `{ token }` |
+| POST | `/todo` | `token` header | `{ title }` | `{ message }` |
+| POST | `/todos` | `token` header | – | `{ todos: [...] }` |
+| PUT | `/todo/:id` | `token` header | `{ done }` | `{ message }` |
+| DELETE | `/todo/:id` | `token` header | – | `{ message }` |
+
 ```bash
-node index.js
+TOKEN=$(curl -s -X POST localhost:3000/signin -H "Content-Type: application/json" \
+  -d '{"email":"me@example.com","password":"secret"}' | jq -r .token)
+
+curl -X POST localhost:3000/todo -H "token: $TOKEN" -H "Content-Type: application/json" \
+  -d '{"title":"Learn Node.js"}'
 ```
 
-Server will run at:  
-📍 `http://localhost:3000`
+## Project structure
 
----
+```text
+├── index.js      # Routes, auth middleware, server
+├── db.js         # User and Todo schemas
+└── .env.example  # Required environment variables
+```
 
-## 🙋‍♂️ Author
+## License
 
-Made with ❤️ by **Yuvraj Singh**  
-GitHub: [@yuvrajnode](https://github.com/yuvrajnode)
-
----
-
-## 📜 License
-
-This project is open source and free to use under the [MIT License](LICENSE).
+MIT © Yuvraj Singh

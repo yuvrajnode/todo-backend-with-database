@@ -1,13 +1,14 @@
 {
-  "name": "w7-todobackend",
+  "name": "todo-backend-with-database",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "node --env-file=.env index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
